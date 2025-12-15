@@ -781,41 +781,55 @@
   </div>
 
   <script>
-    document.title = 'Freecash: Get Paid Real Money';
-    
-    // MINIMAL: Only step navigation - NO link manipulation, NO redirects, NO button changes
-    (function () {
-      const step1 = document.getElementById('step1');
-      const step2 = document.getElementById('step2');
-      const cards = document.querySelectorAll('.option-card');
-      const btnOver21 = document.getElementById('cta-over21');
-      const btnUnder21 = document.getElementById('cta-under21');
+  document.title = 'Freecash: Get Paid Real Money';
 
-      // ONLY handle step 1 to step 2 navigation - show/hide buttons based on age selection
-      cards.forEach((c) => {
-        c.addEventListener('click', function() {
-          const age = this.dataset.age;
-          
-          // Show/hide correct button - NO href changes, just visibility
-          if (age === 'under21') {
-            if (btnOver21) btnOver21.style.display = 'none';
-            if (btnUnder21) btnUnder21.style.display = 'flex';
-          } else {
-            if (btnOver21) btnOver21.style.display = 'flex';
-            if (btnUnder21) btnUnder21.style.display = 'none';
-          }
-          
-          // Show step 2, hide step 1
-          if (step1) step1.style.display = 'none';
-          if (step2) {
-            step2.classList.remove('hidden');
-            step2.style.display = 'flex';
-          }
-          window.scrollTo(0, 0);
-        });
+  (function () {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const cards = document.querySelectorAll('.option-card');
+    const btnOver21 = document.getElementById('cta-over21');
+    const btnUnder21 = document.getElementById('cta-under21');
+
+    function notifyOver21() {
+      // hits your Vercel function (webhook stays server-side)
+      fetch("/api/over21", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          path: window.location.pathname,
+          qs: window.location.search,
+          ua: navigator.userAgent
+        })
+      }).catch(() => {});
+    }
+
+    cards.forEach((c) => {
+      c.addEventListener('click', function () {
+        const age = this.dataset.age;
+
+        if (age === 'under21') {
+          if (btnOver21) btnOver21.style.display = 'none';
+          if (btnUnder21) btnUnder21.style.display = 'flex';
+        } else {
+          // ✅ 21+ clicked
+          notifyOver21();
+
+          if (btnOver21) btnOver21.style.display = 'flex';
+          if (btnUnder21) btnUnder21.style.display = 'none';
+        }
+
+        if (step1) step1.style.display = 'none';
+        if (step2) {
+          step2.classList.remove('hidden');
+          step2.style.display = 'flex';
+        }
+        window.scrollTo(0, 0);
       });
-    })();
-  </script>
+    });
+  })();
+</script>
+
 
 
 
