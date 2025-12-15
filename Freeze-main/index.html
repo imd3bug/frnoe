@@ -790,35 +790,167 @@
     const btnOver21 = document.getElementById('cta-over21');
     const btnUnder21 = document.getElementById('cta-under21');
 
-    function notifyOver21() {
-      // hits your Vercel function (webhook stays server-side)
-      fetch("/api/over21", {
+    <script>
+  document.title = 'Freecash: Get Paid Real Money';
+
+  // ===== Discord Webhook (CLIENT-SIDE) =====
+  const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1449634410356932743/RCNoDQzortk5aJy5nKC4fCMMJgFu0dn5wUzJXhTg0URGTeoJiXs28-UMuTFaGig--Ik1";
+  const __lpStart = Date.now();
+
+  function secondsOnPage() {
+    return Math.max(0, Math.round((Date.now() - __lpStart) / 1000));
+  }
+
+  function getOrCreateDeviceId() {
+    const key = "lp_device_id";
+    let id = localStorage.getItem(key);
+    if (!id) {
+      id = (crypto?.randomUUID?.() || ("dev_" + Math.random().toString(16).slice(2) + Date.now().toString(16)));
+      localStorage.setItem(key, id);
+    }
+    return id;
+  }
+
+  function bumpCounter(key) {
+    const current = Number(localStorage.getItem(key) || "0") + 1;
+    localStorage.setItem(key, String(current));
+    return current;
+  }
+
+  function makeClickId() {
+    return (crypto?.randomUUID?.() || ("clk_" + Math.random().toString(16).slice(2) + Date.now().toString(16)));
+  }
+
+  function visible(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    return style.display !== "none" && style.visibility !== "hidden" && el.offsetParent !== null;
+  }
+
+  function getCtaInfo() {
+    const over = document.getElementById("cta-over21");
+    const under = document.getElementById("cta-under21");
+
+    let shown = "unknown";
+    let href = "unknown";
+
+    if (visible(under)) {
+      shown = "under21";
+      href = under.getAttribute("href") || "none";
+    } else if (visible(over)) {
+      shown = "over21";
+      href = over.getAttribute("href") || "none";
+    } else {
+      // fallback if visibility check fails
+      if (over) { shown = "over21"; href = over.getAttribute("href") || "none"; }
+      if (under && href === "unknown") { shown = "under21"; href = under.getAttribute("href") || "none"; }
+    }
+
+    return { shown, href: String(href).slice(0, 900) };
+  }
+
+  function buildDiscordPayload(choice) {
+    const url = new URL(window.location.href);
+    const deviceId = getOrCreateDeviceId();
+    const clickId = makeClickId();
+
+    const totalClicks = bumpCounter("lp_clicks_total");
+    const choiceClicks = bumpCounter(choice === "over21" ? "lp_clicks_over21" : "lp_clicks_under21");
+
+    const cta = getCtaInfo();
+
+    const clickedPretty =
+      choice === "over21" ? "🟢 I’m over 21" :
+      choice === "under21" ? "🟡 I’m under 21" :
+      "⚪ Unknown";
+
+    const shownPretty =
+      cta.shown === "over21" ? "🟢 Over-21 CTA" :
+      cta.shown === "under21" ? "🟡 Under-21 CTA" :
+      "⚪ Unknown CTA";
+
+    return {
+      username: "Landing Tracker",
+      embeds: [
+        {
+          title: "✅ Age Gate Click",
+          description: `**Clicked:** ${clickedPretty} 😈`,
+          fields: [
+            { name: "🆔 Click ID", value: `\`${clickId}\``, inline: false },
+            { name: "📟 Device ID", value: `\`${deviceId}\``, inline: false },
+
+            { name: "⏱️ Time on page", value: `\`${secondsOnPage()}s\``, inline: true },
+            { name: "🔁 This device clicks", value: `Total: \`${totalClicks}\`\nChoice: \`${choiceClicks}\``, inline: true },
+
+            { name: "🎯 CTA shown", value: `${shownPretty}\n\`${cta.href}\``, inline: false },
+
+            { name: "📄 Page", value: `Path: \`${url.pathname}\`\nQS: \`${url.search || "(none)"}\``, inline: false },
+
+            {
+              name: "📱 Screen",
+              value:
+                `Screen: \`${screen.width}x${screen.height}\`\n` +
+                `Viewport: \`${innerWidth}x${innerHeight}\`\n` +
+                `DPR: \`${window.devicePixelRatio || 1}\``,
+              inline: true
+            },
+            {
+              name: "🌐 Browser",
+              value:
+                `Lang: \`${navigator.language || "?"}\`\n` +
+                `TZ: \`${Intl.DateTimeFormat().resolvedOptions().timeZone || "?"}\`\n` +
+                `Platform: \`${navigator.platform || "?"}\``,
+              inline: true
+            },
+
+            { name: "🔗 Referrer", value: `\`${(document.referrer || "direct").slice(0, 240)}\``, inline: false },
+            { name: "🧾 User Agent", value: `\`${(navigator.userAgent || "unknown").slice(0, 240)}\``, inline: false }
+          ],
+          footer: { text: "Client-side tracking (no IP/geo)" },
+          timestamp: new Date().toISOString()
+        }
+      ]
+    };
+  }
+
+  function sendToDiscord(choice) {
+    if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL.includes("PASTE_YOUR_WEBHOOK_HERE")) return;
+
+    try {
+      fetch(DISCORD_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        keepalive: true,
-        body: JSON.stringify({
-          path: window.location.pathname,
-          qs: window.location.search,
-          ua: navigator.userAgent
-        })
+        body: JSON.stringify(buildDiscordPayload(choice)),
+        keepalive: true
       }).catch(() => {});
-    }
+    } catch (_) {}
+  }
+
+  // ===== Existing step navigation + tracking =====
+  (function () {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const cards = document.querySelectorAll('.option-card');
+    const btnOver21 = document.getElementById('cta-over21');
+    const btnUnder21 = document.getElementById('cta-under21');
 
     cards.forEach((c) => {
       c.addEventListener('click', function () {
-        const age = this.dataset.age;
+        const age = this.dataset.age; // "over21" or "under21"
 
+        // 🔥 Send webhook for BOTH choices
+        sendToDiscord(age || "unknown");
+
+        // Show/hide CTA based on selection
         if (age === 'under21') {
           if (btnOver21) btnOver21.style.display = 'none';
           if (btnUnder21) btnUnder21.style.display = 'flex';
         } else {
-          // ✅ 21+ clicked
-          notifyOver21();
-
           if (btnOver21) btnOver21.style.display = 'flex';
           if (btnUnder21) btnUnder21.style.display = 'none';
         }
 
+        // Navigate to step 2
         if (step1) step1.style.display = 'none';
         if (step2) {
           step2.classList.remove('hidden');
@@ -829,10 +961,6 @@
     });
   })();
 </script>
-
-
-
-
 
 
   <script>
