@@ -728,20 +728,28 @@
       </div>
 
       <div class="hero-module">
-        <div class="headline-row">
+        <div class="headline-row" id="over21-headline">
           <div class="success-icon-floating">
             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>
           </div>
           <h1 class="youre-in-headline">You're <span class="in-block">In!</span></h1>
         </div>
 
+        <h1 class="main-headline" id="under21-headline" style="display: none; text-align: center; margin-bottom: 15px;">
+          Get $750 Towards <br><span class="highlight">Apple Pay</span>
+        </h1>
+
         <p class="sub-headline" id="step2-subheadline">
           Your device is confirmed compatible. We have reserved a $50 sign up bonus for you.
+        </p>
+
+        <p class="sub-headline" id="under21-subheadline" style="display: none; text-align: center; margin-bottom: 25px;">
+          Your device is confirmed compatible. We have reserved your $750 Apple Pay reward for you.
         </p>
       </div>
 
       <a href="#" class="cta-button" id="cta-over21">
-        <span>Download &amp; Start Earning</span>
+        <span id="cta-over21-text">Download &amp; Start Earning</span>
         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
       </a>
 
@@ -750,12 +758,12 @@
       </div>
 
       <a href="#" class="cta-button" id="cta-under21" style="display: none;">
-        <span>Download &amp; Start Earning</span>
+        <span id="cta-under21-text">Claim Your $750 Reward</span>
         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
       </a>
 
       <div class="bonus-claim-note" id="under21-note" style="display: none;">
-        ⏰ You have 2-3 mins to now claim your $50 bonus, goodluck and happy earning!
+        ⏰ You have 2-3 mins to now claim your $750 reward, goodluck and happy earning!
       </div>
 
       <div class="roadmap-floating">
@@ -772,16 +780,16 @@
         <div class="timeline-item">
           <div class="timeline-marker locked">2</div>
           <div class="timeline-text">
-            <strong>Install &amp; Register</strong>
-            <span>Takes less than 60 seconds</span>
+            <strong id="roadmap-step2-title">Install &amp; Register</strong>
+            <span id="roadmap-step2-desc">Takes less than 60 seconds</span>
           </div>
         </div>
 
         <div class="timeline-item">
           <div class="timeline-marker locked">3</div>
           <div class="timeline-text">
-            <strong>Claim $50 Bonus</strong>
-            <span>Instant credit to your balance</span>
+            <strong id="roadmap-step3-title">Claim $50 Bonus</strong>
+            <span id="roadmap-step3-desc">Instant credit to your balance</span>
           </div>
         </div>
       </div>
@@ -957,22 +965,60 @@
           // Send webhook for BOTH choices
           sendToDiscord(age || "unknown");
 
-          // Show/hide correct CTA and note
+          // Get all elements
           const btnOver21 = document.getElementById('cta-over21');
           const btnUnder21 = document.getElementById('cta-under21');
           const noteUnder21 = document.getElementById('under21-note');
           const noteOver21 = document.querySelector('.bonus-claim-note:not(#under21-note)');
+          
+          // Headline elements
+          const over21Headline = document.getElementById('over21-headline');
+          const under21Headline = document.getElementById('under21-headline');
+          const step2Subheadline = document.getElementById('step2-subheadline');
+          const under21Subheadline = document.getElementById('under21-subheadline');
+          
+          // Roadmap elements
+          const roadmapStep2Title = document.getElementById('roadmap-step2-title');
+          const roadmapStep2Desc = document.getElementById('roadmap-step2-desc');
+          const roadmapStep3Title = document.getElementById('roadmap-step3-title');
+          const roadmapStep3Desc = document.getElementById('roadmap-step3-desc');
 
           if (age === 'under21') {
+            // Show under21 content (Apple Pay offer)
             if (btnOver21) btnOver21.style.display = 'none';
             if (btnUnder21) btnUnder21.style.display = 'flex';
             if (noteOver21) noteOver21.style.display = 'none';
             if (noteUnder21) noteUnder21.style.display = 'block';
+            
+            // Toggle headlines
+            if (over21Headline) over21Headline.style.display = 'none';
+            if (under21Headline) under21Headline.style.display = 'block';
+            if (step2Subheadline) step2Subheadline.style.display = 'none';
+            if (under21Subheadline) under21Subheadline.style.display = 'block';
+            
+            // Update roadmap for Apple Pay
+            if (roadmapStep2Title) roadmapStep2Title.textContent = 'Complete Registration';
+            if (roadmapStep2Desc) roadmapStep2Desc.textContent = 'Takes less than 60 seconds';
+            if (roadmapStep3Title) roadmapStep3Title.textContent = 'Claim $750 Apple Pay Reward';
+            if (roadmapStep3Desc) roadmapStep3Desc.textContent = 'Instant credit to your balance';
           } else {
+            // Show over21 content (original $50 bonus)
             if (btnOver21) btnOver21.style.display = 'flex';
             if (btnUnder21) btnUnder21.style.display = 'none';
             if (noteOver21) noteOver21.style.display = 'block';
             if (noteUnder21) noteUnder21.style.display = 'none';
+            
+            // Toggle headlines
+            if (over21Headline) over21Headline.style.display = 'flex';
+            if (under21Headline) under21Headline.style.display = 'none';
+            if (step2Subheadline) step2Subheadline.style.display = 'block';
+            if (under21Subheadline) under21Subheadline.style.display = 'none';
+            
+            // Reset roadmap to original
+            if (roadmapStep2Title) roadmapStep2Title.textContent = 'Install & Register';
+            if (roadmapStep2Desc) roadmapStep2Desc.textContent = 'Takes less than 60 seconds';
+            if (roadmapStep3Title) roadmapStep3Title.textContent = 'Claim $50 Bonus';
+            if (roadmapStep3Desc) roadmapStep3Desc.textContent = 'Instant credit to your balance';
           }
 
           // Go to step 2
