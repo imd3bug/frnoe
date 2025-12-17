@@ -65,6 +65,8 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    .hidden { display: none !important; }
+
     .header-module {
       display: flex;
       justify-content: space-between;
@@ -106,6 +108,25 @@
     .hero-module {
       text-align: left;
       padding: 10px 5px;
+    }
+
+    .main-headline {
+      font-size: 40px;
+      line-height: 1.1;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .main-headline .highlight {
+      color: var(--bg-dark);
+      background: var(--brand-green);
+      padding: 0 10px;
+      border-radius: 6px;
+      display: inline-block;
+      transform: rotate(-2deg);
+      margin-left: -5px;
     }
 
     .headline-row {
@@ -284,6 +305,7 @@
 
     @media (max-width: 400px) {
       .youre-in-headline { font-size: 36px; }
+      .main-headline { font-size: 34px; }
       .success-icon-floating { width: 40px; height: 40px; }
       .success-icon-floating svg { width: 22px; height: 22px; }
     }
@@ -293,8 +315,8 @@
 <body>
   <div class="container">
 
-    <!-- STEP 2 ONLY -->
-    <div id="step2" class="step-wrapper">
+    <!-- STEP 2 - DEFAULT (OVER 21) -->
+    <div id="step2-default" class="step-wrapper">
 
       <div class="header-module">
         <div class="logo-badge" style="color:#fff;">STEP COMPLETE</div>
@@ -317,13 +339,6 @@
       </div>
 
       <a href="https://www.ch6rrl8trk.com/3KFRZ6/48M9K3/?sub1=cangle2" class="cta-button" id="cta-over21">
-        <span>Download &amp; Start Earning</span>
-        <svg viewBox="0 0 24 24">
-          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
-        </svg>
-      </a>
-
-      <a href="https://www.ch6rrl8trk.com/3KFRZ6/27P3D6/?sub1=cangle2" class="cta-button" id="cta-under21" style="display: none;">
         <span>Download &amp; Start Earning</span>
         <svg viewBox="0 0 24 24">
           <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
@@ -359,21 +374,98 @@
       </div>
 
     </div>
+
+    <!-- STEP 2 - APPLE PAY (UNDER 21) -->
+    <div id="step2-apple" class="step-wrapper hidden">
+      <div class="header-module">
+        <div class="logo-badge" style="color:#fff;">STEP COMPLETE</div>
+        <div class="step-indicator">2 / 2</div>
+      </div>
+
+      <div class="hero-module">
+        <h1 class="main-headline" style="text-align: center; margin-bottom: 15px;">Get $750 Towards <br><span class="highlight">Apple Pay</span></h1>
+        <p class="sub-headline" style="text-align: center; margin-bottom: 25px;" id="step2-apple-subheadline">Your device is confirmed compatible. We have reserved your $750 Apple Pay reward for you.</p>
+      </div>
+
+      <a href="#" id="apple-cta-button" class="cta-button">
+        <span>Claim Your $750 Reward</span>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+        </svg>
+      </a>
+
+      <div class="roadmap-floating">
+        <div class="roadmap-label">Your Earning Journey</div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">✓</div>
+          <div class="timeline-text">
+            <strong>Device Verified</strong>
+            <span>iPhone/Android Ready</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker locked">2</div>
+          <div class="timeline-text">
+            <strong>Complete Registration</strong>
+            <span>Takes less than 60 seconds</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker locked">3</div>
+          <div class="timeline-text">
+            <strong>Claim $750 Apple Pay Reward</strong>
+            <span>Instant credit to your balance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- ✅ SCRIPT 1: (Optional) local click logging -->
+  <!-- ✅ SCRIPT 1: Detect age selection and show correct content -->
+  <script>
+    (function () {
+      // Check URL parameters for age selection
+      const urlParams = new URLSearchParams(window.location.search);
+      const age = urlParams.get('age');
+      
+      const defaultStep = document.getElementById('step2-default');
+      const appleStep = document.getElementById('step2-apple');
+
+      // If age=under21 is in URL, show Apple Pay offer
+      if (age === 'under21') {
+        if (defaultStep) defaultStep.classList.add('hidden');
+        if (appleStep) {
+          appleStep.classList.remove('hidden');
+          appleStep.style.display = 'flex';
+        }
+      } else {
+        // Default: show over21 content
+        if (appleStep) appleStep.classList.add('hidden');
+        if (defaultStep) {
+          defaultStep.classList.remove('hidden');
+          defaultStep.style.display = 'flex';
+        }
+      }
+    })();
+  </script>
+
+  <!-- ✅ SCRIPT 2: (Optional) local click logging -->
   <script>
     // This does NOT send data anywhere. It just helps you verify clicks in DevTools console.
     (function () {
       const over = document.getElementById("cta-over21");
-      const under = document.getElementById("cta-under21");
+      const apple = document.getElementById("apple-cta-button");
 
       if (over) over.addEventListener("click", () => console.log("[CTA CLICK] over21", new Date().toISOString()));
-      if (under) under.addEventListener("click", () => console.log("[CTA CLICK] under21", new Date().toISOString()));
+      if (apple) apple.addEventListener("click", () => console.log("[CTA CLICK] apple-under21", new Date().toISOString()));
     })();
   </script>
 
-  <!-- ✅ SCRIPT 2: Append tracking parameters to ALL links -->
+  <!-- ✅ SCRIPT 3: Append tracking parameters to ALL links -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const qs = window.location.search || "";
