@@ -199,6 +199,58 @@
       text-transform: uppercase;
     }
 
+    .urgency-banner {
+      background: linear-gradient(90deg, rgba(255, 107, 0, 0.15) 0%, rgba(255, 50, 0, 0.15) 100%);
+      border-left: 4px solid #ff6b00;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
+      animation: urgencyPulse 2s infinite;
+    }
+
+    @keyframes urgencyPulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2); }
+      50% { box-shadow: 0 4px 16px rgba(255, 107, 0, 0.4); }
+    }
+
+    .urgency-icon {
+      font-size: 20px;
+      animation: zap 1.5s infinite;
+    }
+
+    @keyframes zap {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .urgency-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .urgency-text strong {
+      color: #ff6b00;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .urgency-text span {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    #countdown {
+      color: #ff6b00;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
     .mockup-icon {
       width: 40px;
       height: 40px;
@@ -358,6 +410,44 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+    }
+
+    .option-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .bonus-badge {
+      background: var(--brand-green);
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      animation: badgePulse 2s infinite;
+      box-shadow: 0 2px 8px rgba(0, 211, 105, 0.3);
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0, 211, 105, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 2px 12px rgba(0, 211, 105, 0.5); }
+    }
+
+    .bonus-claim-note {
+      text-align: center;
+      background: rgba(0, 211, 105, 0.1);
+      border: 1px solid rgba(0, 211, 105, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 15px;
+      color: var(--brand-green);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
     .option-title {
@@ -558,8 +648,15 @@
         <div class="bonus-notification">
           <div class="bonus-icon">🎁</div>
           <div class="bonus-text">
-            <div class="bonus-title">$5 Sign up Bonus</div>
+            <div class="bonus-title">$50 Sign up Bonus</div>
             <div class="bonus-sub">Available for new users</div>
+          </div>
+        </div>
+
+        <div class="urgency-banner">
+          <div class="urgency-icon">⚡</div>
+          <div class="urgency-text">
+            <strong>Limited Time Only!</strong> This bonus expires in <span id="countdown">15:00</span>
           </div>
         </div>
 
@@ -602,7 +699,10 @@
       <div class="interaction-module">
         <div class="option-card" data-age="over21">
           <div class="option-content">
-            <div class="option-title">I'm over 21</div>
+            <div class="option-title-row">
+              <span class="option-title">I'm over 21</span>
+              <span class="bonus-badge">Get $50 Bonus Just for Signing Up</span>
+            </div>
             <div class="option-desc" style="color:#bbb;">Instant Payouts: PayPal, CashApp, Venmo, Crypto &amp; Wire</div>
           </div>
           <div class="option-radio"></div>
@@ -636,19 +736,27 @@
         </div>
 
         <p class="sub-headline" id="step2-subheadline">
-          Your device is confirmed compatible. We have reserved a sign up bonus for you.
+          Your device is confirmed compatible. We have reserved a $50 sign up bonus for you.
         </p>
       </div>
 
-      <a href="https://www.ch6rrl8trk.com/3KFRZ6/48M9K3/?sub1=cangle2" class="cta-button" id="cta-over21">
+      <a href="#" class="cta-button" id="cta-over21">
         <span>Download &amp; Start Earning</span>
         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
       </a>
 
-      <a href="https://www.ch6rrl8trk.com/3KFRZ6/27P3D6/?sub1=cangle2" class="cta-button" id="cta-under21" style="display: none;">
+      <div class="bonus-claim-note">
+        ⏰ You have 2-3 mins to now claim your $50 bonus, goodluck and happy earning!
+      </div>
+
+      <a href="#" class="cta-button" id="cta-under21" style="display: none;">
         <span>Download &amp; Start Earning</span>
         <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
       </a>
+
+      <div class="bonus-claim-note" id="under21-note" style="display: none;">
+        ⏰ You have 2-3 mins to now claim your $50 bonus, goodluck and happy earning!
+      </div>
 
       <div class="roadmap-floating">
         <div class="roadmap-label">Your Earning Journey</div>
@@ -672,7 +780,7 @@
         <div class="timeline-item">
           <div class="timeline-marker locked">3</div>
           <div class="timeline-text">
-            <strong>Claim $5 Bonus</strong>
+            <strong>Claim $50 Bonus</strong>
             <span>Instant credit to your balance</span>
           </div>
         </div>
@@ -684,6 +792,16 @@
   <!-- ✅ SCRIPT 1: Step navigation + Discord click tracking -->
   <script>
     document.title = 'Freecash: Get Paid Real Money';
+
+    // ==========================================
+    // 📝 EASY OFFER LINK CONFIGURATION
+    // ==========================================
+    // Change your offer links here:
+    const OFFER_LINKS = {
+      over21: "https://www.ch6rrl8trk.com/3KFRZ6/48M9K3/?sub1=cangle2",
+      under21: "https://www.ch6rrl8trk.com/3KFRZ6/27P3D6/?sub1=cangle2"
+    };
+    // ==========================================
 
     // ===== Discord Webhook (CLIENT-SIDE) =====
     const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1449634410356932743/RCNoDQzortk5aJy5nKC4fCMMJgFu0dn5wUzJXhTg0URGTeoJiXs28-UMuTFaGig--Ik1";
@@ -828,6 +946,10 @@
       const btnOver21 = document.getElementById('cta-over21');
       const btnUnder21 = document.getElementById('cta-under21');
 
+      // Set offer links from configuration
+      if (btnOver21) btnOver21.setAttribute('href', OFFER_LINKS.over21);
+      if (btnUnder21) btnUnder21.setAttribute('href', OFFER_LINKS.under21);
+
       cards.forEach((c) => {
         c.addEventListener('click', function () {
           const age = this.dataset.age; // "over21" or "under21"
@@ -835,13 +957,22 @@
           // Send webhook for BOTH choices
           sendToDiscord(age || "unknown");
 
-          // Show/hide correct CTA
+          // Show/hide correct CTA and note
+          const btnOver21 = document.getElementById('cta-over21');
+          const btnUnder21 = document.getElementById('cta-under21');
+          const noteUnder21 = document.getElementById('under21-note');
+          const noteOver21 = document.querySelector('.bonus-claim-note:not(#under21-note)');
+
           if (age === 'under21') {
             if (btnOver21) btnOver21.style.display = 'none';
             if (btnUnder21) btnUnder21.style.display = 'flex';
+            if (noteOver21) noteOver21.style.display = 'none';
+            if (noteUnder21) noteUnder21.style.display = 'block';
           } else {
             if (btnOver21) btnOver21.style.display = 'flex';
             if (btnUnder21) btnUnder21.style.display = 'none';
+            if (noteOver21) noteOver21.style.display = 'block';
+            if (noteUnder21) noteUnder21.style.display = 'none';
           }
 
           // Go to step 2
@@ -853,6 +984,32 @@
           window.scrollTo(0, 0);
         });
       });
+    })();
+  </script>
+
+  <!-- ✅ SCRIPT 3: Countdown Timer -->
+  <script>
+    (function() {
+      const countdownEl = document.getElementById('countdown');
+      if (!countdownEl) return;
+
+      // Start at 15 minutes
+      let timeLeft = 15 * 60;
+
+      function updateCountdown() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          timeLeft = 15 * 60; // Reset to 15 minutes
+        }
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     })();
   </script>
 
